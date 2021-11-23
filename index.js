@@ -42,8 +42,41 @@ const messagesList = {
 
         english: 'Computer selection is ',
         spanish: 'La selección de la computadora es '
-    }
+    },
+
+    stats: {
+
+        title: {
+
+            english: 'Stats:',
+            spanish: 'Estadisticas:'
+        },
+
+        victory: {
+
+            english: '  - Victory count: ',
+            spanish: '  - Victorias: '
+        },
+
+        consecutiveVictory: {
+
+            english: '      - Consecutive victory count: ',
+            spanish: '      - Victorias consecutivas: ',
+        },
+
+        defeat: {
+
+            english: '  - Defeat count: ',
+            spanish: '  - Derrotas: ',
+        }
+    },
+
+
 }
+
+victoryCount = 0
+consecutiveVictoryCount = 0
+defeatCount = 0
 
 inquirer.prompt({
     
@@ -59,14 +92,27 @@ inquirer.prompt({
         
         const languageSelection = answer.languageSelect.toLowerCase()
 
+        function showStats() {
+
+            console.log()
+            console.log(messagesList.stats.title[languageSelection])
+            console.log(messagesList.stats.victory[languageSelection] + victoryCount)
+            console.log(messagesList.stats.consecutiveVictory[languageSelection] + consecutiveVictoryCount)
+            console.log(messagesList.stats.defeat[languageSelection] + defeatCount)
+        }
+
         function victoryMessage() {
             
-            console.log('   ' + messagesList.victory[languageSelection])
+            victoryCount++
+            consecutiveVictoryCount++
+            console.log(messagesList.victory[languageSelection])
         }
 
         function defeatMessage() {
 
-            console.log('   ' + messagesList.defeat[languageSelection])
+            defeatCount++
+            consecutiveVictoryCount = 0
+            console.log(messagesList.defeat[languageSelection])
         }
         
         function translateOption(userSelection, actualLanguage, targetLanguage) {
@@ -77,7 +123,7 @@ inquirer.prompt({
         }
 
         console.log('')
-        console.log('   ' + messagesList.welcome[languageSelection])
+        console.log(messagesList.welcome[languageSelection])
         console.log('')
         
         inquirer.prompt({
@@ -97,12 +143,12 @@ inquirer.prompt({
                 let userSelection = answer.userSelecction
                     userSelection = translateOption(userSelection, languageSelection, 'english')
 
-                console.log('   ' + messagesList.computerSelection[languageSelection] + translateOption(computerSelection, 'english', languageSelection))
+                console.log()
+                console.log(messagesList.computerSelection[languageSelection] + translateOption(computerSelection, 'english', languageSelection))
 
                 if (computerSelection === userSelection) {
 
-                    console.log('   ' + messagesList.tie[languageSelection])
-                    return
+                    console.log(messagesList.tie[languageSelection])
                 }
 
                 // if (computerSelection === 'Rock') {
@@ -203,5 +249,8 @@ inquirer.prompt({
                     default:
                         break;
                 }
+
+                showStats()
+
             })
     })
