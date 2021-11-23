@@ -24,18 +24,26 @@ const messagesList = {
 
         english: 'The result is a draw! GG',
         spanish: 'Empate! Bien Jugado.'
+    },
+
+    victory: {
+
+        english: 'You win!',
+        spanish: 'Ganaste!'
+    },
+
+    defeat: {
+
+        english: 'You lost...',
+        spanish: 'Perdiste...'
+    },
+
+    computerSelection: {
+
+        english: 'Computer selection is ',
+        spanish: 'La selección de la computadora es '
     }
 }
-
-function victoryMessage() {
-
-    console.log('   ' + messagesList.victory[languageSelection])
-}
-
-// function translateOption() {
-
-
-// }
 
 inquirer.prompt({
     
@@ -51,25 +59,45 @@ inquirer.prompt({
         
         const languageSelection = answer.languageSelect.toLowerCase()
 
+        function victoryMessage() {
+            
+            console.log('   ' + messagesList.victory[languageSelection])
+        }
+
+        function defeatMessage() {
+
+            console.log('   ' + messagesList.defeat[languageSelection])
+        }
+        
+        function translateOption(userSelection, actualLanguage, targetLanguage) {
+        
+            const index = messagesList.options[actualLanguage].findIndex((element) => element === userSelection)
+        
+            return messagesList.options[targetLanguage][index]
+        }
+
         console.log('')
         console.log('   ' + messagesList.welcome[languageSelection])
         console.log('')
         
-        const options = [...messagesList.options[languageSelection]]
-
         inquirer.prompt({
 
             name: 'userSelecction',
             message: messagesList.play[languageSelection],
             type: 'list',
 
-            choices: options
+            choices: [...messagesList.options[languageSelection]]
         })
 
             .then((answer) => {
 
+                const options = [...messagesList.options['english']]
                 const computerSelection = options[Math.floor(Math.random() * options.length)]
-                const userSelection = answer.userSelecction
+                
+                let userSelection = answer.userSelecction
+                    userSelection = translateOption(userSelection, languageSelection, 'english')
+
+                console.log('   ' + messagesList.computerSelection[languageSelection] + translateOption(computerSelection, 'english', languageSelection))
 
                 if (computerSelection === userSelection) {
 
@@ -77,5 +105,103 @@ inquirer.prompt({
                     return
                 }
 
+                // if (computerSelection === 'Rock') {
+
+                //     if (userSelection === 'Paper') {
+
+                //         victoryMessage()
+                //         return
+                //     }
+
+                //     if (userSelection === 'Scissors') {
+
+                //         defeatMessage()
+                //         return
+                //     }
+                    
+                //     return
+                // }
+
+                // if (computerSelection === 'Paper') {
+
+                //     if (userSelection === 'Rock') {
+
+                //         defeatMessage()
+                //         return
+                //     }
+
+                //     if (userSelection === 'Scissors') {
+
+                //         victoryMessage()
+                //         return
+                //     }
+                    
+                //     return
+                // }
+
+                // if (computerSelection === 'Scissors') {
+
+                //     if (userSelection === 'Rock') {
+
+                //         victoryMessage()
+                //         return
+                //     }
+
+                //     if (userSelection === 'Paper') {
+
+                //         defeatMessage()
+                //         return
+                //     }
+                    
+                //     return
+                // }
+
+                switch (computerSelection) {
+
+                    case 'Rock':
+
+                        if (userSelection === 'Paper') {
+
+                            victoryMessage()
+                        }
+
+                        if (userSelection === 'Scissors') {
+
+                            defeatMessage()
+                        }
+                            
+                        break;
+                    
+                    case 'Paper': 
+
+                        if (userSelection === 'Rock') {
+
+                            defeatMessage()
+                        }
+            
+                        if (userSelection === 'Scissors') {
+            
+                            victoryMessage()
+                        }
+                                
+                        break;
+
+                    case 'Scissors':
+
+                        if (userSelection === 'Rock') {
+
+                            victoryMessage()
+                        }
+            
+                        if (userSelection === 'Paper') {
+    
+                            defeatMessage()
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
             })
     })
