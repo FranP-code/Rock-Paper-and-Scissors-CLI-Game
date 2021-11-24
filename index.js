@@ -1,4 +1,5 @@
 const inquirer = require('inquirer')
+const colors = require('colors')
 
 const messagesList = {
 
@@ -6,6 +7,12 @@ const messagesList = {
 
         english: 'Welcome to the Rock Paper and Scissors CLI game!',
         spanish: '¡Bienvenido al juego de Piedra Papel o Tijeras desde la consola!'
+    },
+
+    gameTitle: {
+
+        english: 'Rock Paper and Scissors CLI game',
+        spanish: 'Piedra Papel o Tijeras desde la consola'        
     },
 
     play: {
@@ -20,28 +27,40 @@ const messagesList = {
         spanish: ['Piedra', 'Papel', 'Tijeras']
     },
 
+    resultTitle: {
+
+        english: 'Results:',
+        spanish: 'Resultados:'
+    },
+
     tie: {
 
-        english: 'The result is a draw! GG',
-        spanish: 'Empate! Bien Jugado.'
+        english: '  - The result is a draw! GG',
+        spanish: '  - Empate! Bien Jugado.'
     },
 
     victory: {
 
-        english: 'You win!',
-        spanish: 'Ganaste!'
+        english: '  - You win!',
+        spanish: '  - Ganaste!'
     },
 
     defeat: {
 
-        english: 'You lost...',
-        spanish: 'Perdiste...'
+        english: '  - You lost...',
+        spanish: '  - Perdiste...'
+    },
+
+    computerSelectionTitle: {
+
+        english: 'Computer selection:',
+        spanish: 'Selección de la computadora:'
     },
 
     computerSelection: {
 
-        english: 'Computer selection is ',
-        spanish: 'La selección de la computadora es '
+        english: '  - Computer selection is ',
+        spanish: '  - La selección de la computadora es '
     },
 
     stats: {
@@ -102,24 +121,24 @@ function gameLogic(languageSelection) {
     function showStats() {
 
         console.log()
-        console.log(messagesList.stats.title[languageSelection])
-        console.log(messagesList.stats.victory[languageSelection] + victoryCount)
-        console.log(messagesList.stats.consecutiveVictory[languageSelection] + consecutiveVictoryCount)
-        console.log(messagesList.stats.defeat[languageSelection] + defeatCount)
+        console.log(messagesList.stats.title[languageSelection].underline.bold)
+        console.log(messagesList.stats.victory[languageSelection] + victoryCount.toString().bold)
+        console.log(messagesList.stats.consecutiveVictory[languageSelection] + consecutiveVictoryCount.toString().bold)
+        console.log(messagesList.stats.defeat[languageSelection] + defeatCount.toString().bold)
     }
 
     function victoryMessage() {
         
         victoryCount++
         consecutiveVictoryCount++
-        console.log(messagesList.victory[languageSelection])
+        console.log(messagesList.victory[languageSelection].bold.green)
     }
 
     function defeatMessage() {
 
         defeatCount++
         consecutiveVictoryCount = 0
-        console.log(messagesList.defeat[languageSelection])
+        console.log(messagesList.defeat[languageSelection].bold.red)
     }
     
     function translateOption(userSelection, actualLanguage, targetLanguage) {
@@ -154,11 +173,15 @@ function gameLogic(languageSelection) {
                 userSelection = translateOption(userSelection, languageSelection, 'english')
 
             console.log()
-            console.log(messagesList.computerSelection[languageSelection] + translateOption(computerSelection, 'english', languageSelection))
+            console.log(messagesList.computerSelectionTitle[languageSelection].underline.bold)
+            console.log(messagesList.computerSelection[languageSelection] + colors.bold(translateOption(computerSelection, 'english', languageSelection)))
+            console.log()
+
+            console.log(messagesList.resultTitle[languageSelection].underline.bold)
 
             if (computerSelection === userSelection) {
 
-                console.log(messagesList.tie[languageSelection])
+                console.log(messagesList.tie[languageSelection].bold.yellow)
             }
 
             // if (computerSelection === 'Rock') {
@@ -278,8 +301,11 @@ function gameLogic(languageSelection) {
 
                     if (response === 'Yes') {
                         
-                        console.log('----------------')
+                        console.clear()
                         console.log()
+                        console.log(messagesList.gameTitle[languageSelection].bold.brightBlue)
+                        console.log()
+
                         gameLogic(languageSelection)
                         return
                     }
@@ -287,7 +313,7 @@ function gameLogic(languageSelection) {
                     if (response === 'No') {
 
                         console.log()
-                        console.log(messagesList.thanksForPlay[languageSelection])
+                        console.log(messagesList.thanksForPlay[languageSelection].bold.brightYellow)
                         console.log()
                         return
                     }
@@ -295,6 +321,8 @@ function gameLogic(languageSelection) {
                 })
         })
 }
+
+console.clear()
 
 inquirer.prompt({
     
@@ -311,7 +339,7 @@ inquirer.prompt({
         const languageSelection = answer.languageSelect.toLowerCase()
 
         console.log('')
-        console.log(messagesList.welcome[languageSelection])
+        console.log(messagesList.welcome[languageSelection].bold.brightBlue)
         console.log('')
         
         gameLogic(languageSelection)
